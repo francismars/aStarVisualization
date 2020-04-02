@@ -197,12 +197,12 @@ function aStar(){
 
 function draw() {
 
-  var lightBlue = color(30,139,195);
+  var lightBlue = "black";
   background(255);
   for (var i = 10; i < (height-200) + 20; i += 20) {
     // draw one line of 20 rectangles across the x-axis
     for (var j = 10; j < width + 20; j += 20) {
-      var lightBlue = color(30,139,195);
+      var lightBlue = "black";
       var range = 10;
       stroke(0, 0, 255);
       if (i > (mouseX - range) && i < (mouseX + range) && j > (mouseY - range) && j < (mouseY + range)) {
