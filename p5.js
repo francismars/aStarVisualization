@@ -10,9 +10,9 @@ function setup() {
   buttonClear = createButton('Clear Obstacules');
   buttonClear.position(400,850);
   buttonClear.mousePressed(clearObs);
-  buttonClear = createButton('Clear');
+  buttonClear = createButton('Clear Path');
   buttonClear.position(600,850);
-  buttonClear.mousePressed(clearAll);
+  buttonClear.mousePressed(clearPath);
 }
 
 casasOcupadas = {}
@@ -30,9 +30,9 @@ function clearObs() {
 	}
 }
 
-function clearAll() {
+function clearPath() {
 	for (i in casasOcupadas){
-		if(casasOcupadas[i]=="ocupada" || casasOcupadas[i]=="caminho"){
+		if(casasOcupadas[i]=="caminho"){
 			delete casasOcupadas[i];
 		}
 	}
@@ -43,6 +43,7 @@ start = []
 goal = []
 
 function pathFind() {
+	clearPath()
 	for (var i = 10; i < (height-200) + 20; i += 20) {
 		matriz[(i-10)/20] = []
 		for (var j = 10; j < width + 20; j += 20) {
@@ -196,7 +197,6 @@ function aStar(){
 
 
 function draw() {
-
   var lightBlue = "black";
   background(255);
   for (var i = 10; i < (height-200) + 20; i += 20) {
@@ -208,7 +208,7 @@ function draw() {
       if (i > (mouseX - range) && i < (mouseX + range) && j > (mouseY - range) && j < (mouseY + range)) {
 		if (setInicio == false & setEnd == false){
 			if (mouseIsPressed) {
-				if (mouseButton === LEFT && !casasOcupadas[i+"x"+j]) {
+				if (mouseButton === LEFT && (!casasOcupadas[i+"x"+j] || casasOcupadas[i+"x"+j]=="caminho")) {
 				  casasOcupadas[i+"x"+j]="ocupada";
 				  //console.log(i,j);
 				}
