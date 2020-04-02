@@ -97,6 +97,7 @@ function aStar(){
 	fScore = {}
 	fScore[start] = dist(start[0], goal[0], start[1], goal[1])
 	while(openSet.length>0){
+		//console.log(, matriz[0].length)
 		current = openSet.shift()
 		//console.log(current)
 		//console.log(goal)
@@ -148,7 +149,7 @@ function aStar(){
 			}		
 		}
 		// vizinho baixo
-		if(current[1]+1<=40 && matriz[current[0]][current[1]+1]!="ocupada"){
+		if(current[1]+1<matriz[0].length && matriz[current[0]][current[1]+1]!="ocupada"){
 			tentative_gScore = gScore[current] + 1
 			neighbor=[]
 			neighbor[0]=current[0]
@@ -167,7 +168,7 @@ function aStar(){
 			}		
 		}		
 		// vizinho direita
-		if(current[0]+1<=39 && matriz[current[0]+1][current[1]]!="ocupada"){
+		if(current[0]+1<matriz.length-1 && matriz[current[0]+1][current[1]]!="ocupada"){
 			tentative_gScore = gScore[current] + 1
 			neighbor=[]
 			neighbor[0]=current[0]+1
