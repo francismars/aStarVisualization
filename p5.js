@@ -7,8 +7,11 @@ function setup() {
   buttonFind = createButton('Find Path');
   buttonFind.position(200,850);
   buttonFind.mousePressed(pathFind);
+/*   buttonClear = createButton('Generate Maze');
+  buttonClear.position(300,850);
+  buttonClear.mousePressed(mazeAlg); */
   buttonClear = createButton('Clear Obstacules');
-  buttonClear.position(400,850);
+  buttonClear.position(450,850);
   buttonClear.mousePressed(clearObs);
   buttonClear = createButton('Clear Path');
   buttonClear.position(600,850);
@@ -16,8 +19,8 @@ function setup() {
 }
 
 casasOcupadas = {}
-casasOcupadas[190+"x"+290]="inicio";
-casasOcupadas[410+"x"+290]="fim";
+casasOcupadas[50+"x"+50]="inicio";
+casasOcupadas[750+"x"+770]="fim";
 
 setInicio = false;
 setEnd = false;
@@ -42,9 +45,26 @@ matriz = []
 start = []
 goal = []
 
+/* function mazeAlg() {
+	for (var i = 10; i < height + 20; i += 20) {
+		for (var j = 10; j < width + 20; j += 20) {
+			if(i==10 || j==10 || i==height-210 || j==width+10){
+				casasOcupadas[i+"x"+j] = "ocupada"			
+			}			
+		}	
+	}
+	maze2(height-210,width+10,(height-210)/2,(width+10)/2)	
+}
+
+function maze2(h,w,x,y){
+	random1=Math.floor(Math.random() * height-210)
+	random2=Math.floor(Math.random() * width+10)
+} */
+
+
 function pathFind() {
 	clearPath()
-	for (var i = 10; i < (height-200) + 20; i += 20) {
+	for (var i = 10; i < height + 20; i += 20) {
 		matriz[(i-10)/20] = []
 		for (var j = 10; j < width + 20; j += 20) {
 			matriz[(i-10)/20][(j-10)/20] = "vazio"
