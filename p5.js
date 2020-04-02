@@ -10,6 +10,9 @@ function setup() {
   buttonClear = createButton('Clear Obstacules');
   buttonClear.position(400,850);
   buttonClear.mousePressed(clearObs);
+  buttonClear = createButton('Clear');
+  buttonClear.position(600,850);
+  buttonClear.mousePressed(clearAll);
 }
 
 casasOcupadas = {}
@@ -22,6 +25,14 @@ setEnd = false;
 function clearObs() {
 	for (i in casasOcupadas){
 		if(casasOcupadas[i]=="ocupada"){
+			delete casasOcupadas[i];
+		}
+	}
+}
+
+function clearAll() {
+	for (i in casasOcupadas){
+		if(casasOcupadas[i]=="ocupada" || casasOcupadas[i]=="caminho"){
 			delete casasOcupadas[i];
 		}
 	}
@@ -155,7 +166,7 @@ function aStar(){
 			}		
 		}		
 		// vizinho direita
-		if(current[0]+1<=40 && matriz[current[0]+1][current[1]]!="ocupada"){
+		if(current[0]+1<=39 && matriz[current[0]+1][current[1]]!="ocupada"){
 			tentative_gScore = gScore[current] + 1
 			neighbor=[]
 			neighbor[0]=current[0]+1
@@ -216,11 +227,30 @@ function draw() {
 				  //console.log(setInicio)
 				}				
 			}
-			noStroke();
-			fill("black");
-			rect(i,j,20,20);
-			stroke(lightBlue);
-			rect(i, j, 20, 20);			
+			if(casasOcupadas[i+"x"+j]=="inicio"){
+				noFill();
+				stroke(lightBlue);
+				fill('black')
+				rect(i, j, 20, 20);
+				textSize(18);
+				fill("green");
+				text('S', i-6, j+6);			
+			}
+			else if(casasOcupadas[i+"x"+j]=="fim"){
+				noFill();
+				stroke(lightBlue);
+				fill('black')
+				rect(i, j, 20, 20);
+				textSize(18);
+				fill("blue");
+				text('F', i-6, j+6);
+			} else{
+				noStroke();
+				fill("black");
+				rect(i,j,20,20);
+				stroke(lightBlue);
+				rect(i, j, 20, 20);					
+			}					
 		} else if (setInicio == true){
 			if (mouseIsPressed) {
 				if (mouseButton === LEFT && !casasOcupadas[i+"x"+j]) {
@@ -251,7 +281,7 @@ function draw() {
 			stroke(lightBlue);
 			rect(i, j, 20, 20);
 			textSize(18);
-			fill("black");
+			fill("white");
 			text('F', i-6, j+6);			
 		}
       } else {
