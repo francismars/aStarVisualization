@@ -64,7 +64,7 @@ function maze2(h,w,x,y){
 
 function pathFind() {
 	clearPath()
-	for (var i = 10; i < height + 20; i += 20) {
+	for (var i = 10; i < (height-200) + 20; i += 20) {
 		matriz[(i-10)/20] = []
 		for (var j = 10; j < width + 20; j += 20) {
 			matriz[(i-10)/20][(j-10)/20] = "vazio"
@@ -117,7 +117,7 @@ function aStar(){
 	fScore = {}
 	fScore[start] = dist(start[0], goal[0], start[1], goal[1])
 	while(openSet.length>0){
-		//console.log(, matriz[0].length)
+		console.log(matriz.length, matriz[0].length)
 		current = openSet.shift()
 		//console.log(current)
 		//console.log(goal)
