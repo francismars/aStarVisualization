@@ -1,5 +1,5 @@
 # A* Algorithm Visualization
-###Visualization of Path Finding
+### Visualization of Path Finding
 
 Left Mouse: 
 - Draw Wall
@@ -8,6 +8,7 @@ Left Mouse:
 
 Right Mouse: 
 - Remove Wall
+
 
 Maze Generator in Beta
 
