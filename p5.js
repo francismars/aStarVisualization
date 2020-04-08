@@ -7,9 +7,9 @@ function setup() {
   buttonFind = createButton('Find Path');
   buttonFind.position(200,850);
   buttonFind.mousePressed(pathFind);
-/*   buttonClear = createButton('Generate Maze');
+  buttonClear = createButton('Generate Maze');
   buttonClear.position(300,850);
-  buttonClear.mousePressed(mazeAlg); */
+  buttonClear.mousePressed(mazeAlg);
   buttonClear = createButton('Clear Obstacules');
   buttonClear.position(450,850);
   buttonClear.mousePressed(clearObs);
@@ -19,11 +19,16 @@ function setup() {
 }
 
 casasOcupadas = {}
-casasOcupadas[50+"x"+50]="inicio";
-casasOcupadas[750+"x"+770]="fim";
+casasOcupadas[30+"x"+30]="inicio";
+casasOcupadas[770+"x"+790]="fim";
 
 setInicio = false;
 setEnd = false;
+
+matriz = []
+start = []
+goal = []
+
 
 function clearObs() {
 	for (i in casasOcupadas){
@@ -41,25 +46,71 @@ function clearPath() {
 	}
 }
 
-matriz = []
-start = []
-goal = []
 
-/* function mazeAlg() {
-	for (var i = 10; i < height + 20; i += 20) {
+function mazeAlg() {
+	for (var i = 10; i < (height-200)+20; i += 20) {
 		for (var j = 10; j < width + 20; j += 20) {
 			if(i==10 || j==10 || i==height-210 || j==width+10){
 				casasOcupadas[i+"x"+j] = "ocupada"			
 			}			
 		}	
 	}
-	maze2(height-210,width+10,(height-210)/2,(width+10)/2)	
+	maze2(10,10,(height-210),(width+10))	
 }
 
-function maze2(h,w,x,y){
-	random1=Math.floor(Math.random() * height-210)
-	random2=Math.floor(Math.random() * width+10)
-} */
+
+dividorsX=[]
+dividorsY=[]
+function maze2(x,y,h,w){
+	dividorX =(Math.floor(Math.random() * ((w-20)/20 - (x+40)/20)) + (x+40)/20) * 20
+	dividorY=(Math.floor(Math.random() * ((h-20)/20 - (y+40)/20)) + (y+40)/20) * 20
+	dividorsX.push(dividorX)
+	dividorsY.push(dividorY)
+	passagem11=-1
+	passagem12=-1
+	
+	while(passagem11<0 || passagem12<0 || dividorsY.includes(passagem11) || dividorsY.includes(passagem12)){
+		passagem11=(Math.floor(Math.random() * ((dividorY-20)/20 - (x+40)/20)) + (x+40)/20) * 20
+		passagem12=(Math.floor(Math.random() * ((w-20)/20 - (dividorY+40)/20)) + (dividorY+40)/20) * 20		
+	}
+	passagem21=-1
+	passagem22=-1
+	while(passagem21<0 || passagem22<0 || dividorsX.includes(passagem21) || dividorsX.includes(passagem22)){
+		passagem21=(Math.floor(Math.random() * ((dividorX-20)/20 - (y+40)/20)) + (y+40)/20) * 20
+		passagem22=(Math.floor(Math.random() * ((h-20)/20 - (dividorX+40)/20)) + (dividorX+40)/20) * 20	
+	}
+
+	
+	for (var j = 10; j < width + 20; j += 20) {
+			casasOcupadas[j+"x"+dividorX] = "ocupada"						
+	}
+	casasOcupadas[passagem11+"x"+dividorX] = "vazio"
+	casasOcupadas[passagem12+"x"+dividorX] = "vazio"
+	for (var i = 10; i < (height-200)+20; i += 20) {
+			casasOcupadas[dividorY+"x"+i] = "ocupada"						
+	}
+	casasOcupadas[dividorY+"x"+passagem21] = "vazio"
+	casasOcupadas[dividorY+"x"+passagem22] = "vazio"
+
+	console.log(x,y,h,w,dividorX,dividorY)
+	// Segundo Quadrante
+	if(dividorX-x>80 && dividorY-y>80){
+		maze2(x,y,dividorX,dividorY)
+	} 
+ 	// Terceiro Quadrante
+/* 	if(dividorX-x>80 && h-dividorY>80){
+		maze2(x,dividorY,dividorX,h)
+	}
+ 	// Quarto Quadrante
+	if(w-dividorX>80 && h-dividorY>80){
+		maze2(dividorX,dividorY,h,w)
+	}
+	//Primeiro Quadrante
+	if(w-dividorX>80 && dividorY-y>80){
+		maze2(dividorX,y,w,dividorY)
+	}	 */ 
+}
+
 
 
 function pathFind() {
@@ -88,9 +139,15 @@ function pathFind() {
 	}
 	//console.log(matriz)
 	foundPath = aStar()
-	for(XxY in foundPath){
+/* 	for(XxY in foundPath){
 		//console.log(((foundPath[XxY][0]*20)+10)+"x"+((foundPath[XxY][1]*20)+10))
-		casasOcupadas[((foundPath[XxY][0]*20)+10)+"x"+((foundPath[XxY][1]*20)+10)]="caminho"
+		
+	} */
+	//console.log(foundPath.length)
+	//console.log(((foundPath[0][0]*20)+10)+"x"+((foundPath[0][1]*20)+10))
+	for(i=0;i<foundPath.length;i++){
+		//console.log(((foundPath[i][0]*20)+10)+"x"+((foundPath[i][1]*20)+10))
+		casasOcupadas[((foundPath[i][0]*20)+10)+"x"+((foundPath[i][1]*20)+10)]="caminho"
 	}
 }
 
@@ -117,7 +174,7 @@ function aStar(){
 	fScore = {}
 	fScore[start] = dist(start[0], goal[0], start[1], goal[1])
 	while(openSet.length>0){
-		console.log(matriz.length, matriz[0].length)
+		//console.log(matriz.length, matriz[0].length)
 		current = openSet.shift()
 		//console.log(current)
 		//console.log(goal)
