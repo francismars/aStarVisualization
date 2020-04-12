@@ -1,6 +1,6 @@
 const WIDTH = 800
 const HEIGHT = 800
-const CELLSIZE = 20
+const CELLSIZE = 10
 const RANGE = CELLSIZE/2;
 const BLUEGREEN = [13, 152, 186]
 const BLUEPURPLE = [54.1, 16.9, 88.6]
@@ -65,7 +65,9 @@ function mazeAlg() {
 	for (var i = RANGE; i < height + RANGE; i += CELLSIZE) {
 		for (var j = RANGE; j < width + RANGE; j += CELLSIZE) {
 			if(i==RANGE || j==RANGE || i==height-RANGE || j==width-RANGE){
-				casasOcupadas[i+"x"+j] = "ocupada"			
+				if(casasOcupadas[i+"x"+j] != "inicio" && casasOcupadas[i+"x"+j] != "fim"){
+					casasOcupadas[i+"x"+j] = "ocupada"
+				}							
 			}			
 		}	
 	}
@@ -118,16 +120,28 @@ function maze2(x,y,w,h){
 	dividorsY.push(passagemY2)
 	
 	for (var i = x; i < h + RANGE; i += CELLSIZE) {
-		casasOcupadas[i+"x"+dividorX] = "ocupada"						
+		if(casasOcupadas[i+"x"+dividorX] != "inicio" && casasOcupadas[i+"x"+dividorX] != "fim"){
+			casasOcupadas[i+"x"+dividorX] = "ocupada"		
+		}						
 	}
-	delete casasOcupadas[passagemX1+"x"+dividorX]
-	delete casasOcupadas[passagemX2+"x"+dividorX]
+	if(casasOcupadas[passagemX1+"x"+dividorX]!="inicio" && casasOcupadas[passagemX1+"x"+dividorX]!="fim"){
+		delete casasOcupadas[passagemX1+"x"+dividorX]
+	}
+	if(casasOcupadas[passagemX2+"x"+dividorX]!="inicio" && casasOcupadas[passagemX2+"x"+dividorX]!="fim"){
+		delete casasOcupadas[passagemX2+"x"+dividorX]
+	}	
 	
  	for (var j = y; j < w + RANGE; j += CELLSIZE) {
-		casasOcupadas[dividorY+"x"+j] = "ocupada"						
+		if(casasOcupadas[dividorY+"x"+j] != "inicio" && casasOcupadas[dividorY+"x"+j] != "fim"){
+			casasOcupadas[dividorY+"x"+j] = "ocupada"
+		}								
 	}
-	delete casasOcupadas[dividorY+"x"+passagemY1]
-	delete casasOcupadas[dividorY+"x"+passagemY2] 
+	if(casasOcupadas[dividorY+"x"+passagemY1]!="inicio" && casasOcupadas[dividorY+"x"+passagemY1]!="fim"){
+		delete casasOcupadas[dividorY+"x"+passagemY1]
+	}
+	if(casasOcupadas[dividorY+"x"+passagemY2]!="inicio" && casasOcupadas[dividorY+"x"+passagemY2]!="fim"){
+		delete casasOcupadas[dividorY+"x"+passagemY2]
+	}
 		
 
 	// Segundo Quadrante
@@ -135,8 +149,8 @@ function maze2(x,y,w,h){
 		maze2(x,y,dividorX,dividorY)
 	} 
 	// Quarto Quadrante
-	if(h-dividorY>CELLSIZE*4 && w-dividorX>CELLSIZE*4){
-		maze2(dividorY,dividorX,h,w)
+	if(w-dividorY>CELLSIZE*4 && h-dividorX>CELLSIZE*4){
+		maze2(dividorY,dividorX,w,h)
 	}
  	// Terceiro Quadrante
 /*	if(dividorX-x>80 && h-dividorY>80){
@@ -213,15 +227,13 @@ function aStar(){
 			for(j=-1;j<=1;j++){
 				if(current[0]+i>=0 && current[1]+j>=0 && 
 					current[0]+i<matriz.length && current[1]+j<matriz[0].length &&
-					matriz[current[0]+i][current[1]+j]!="ocupada"){
-					
-					tentative_gScore = gScore[current] + 1
+					matriz[current[0]+i][current[1]+j]!="ocupada"){					
 					neighbor=[]
 					neighbor[0]=current[0]+i
-					neighbor[1]=current[1]+j
+					neighbor[1]=current[1]+j					
+					tentative_gScore = gScore[current] + 1					
 					if(!gScore[neighbor]){
-						gScore[neighbor]=99999;
-						
+						gScore[neighbor]=99999;						
 					}				
 					if(tentative_gScore < gScore[neighbor]){
 						cameFrom[neighbor] = current
@@ -265,44 +277,44 @@ function draw() {
 					if(casasOcupadas[i+"x"+j]=="inicio"){				
 						fill(255)
 						rect(i, j, CELLSIZE, CELLSIZE);
-						textSize(18);
+						textSize(CELLSIZE-(CELLSIZE/10));
 						fill(BLUEGREEN);
-						text('S', i-6, j+6);			
+						text('S', i-(CELLSIZE-(CELLSIZE/10))/3, j+(CELLSIZE-(CELLSIZE/10))/3);			
 					}
 					else if(casasOcupadas[i+"x"+j]=="fim"){
 						fill(255)
 						rect(i, j, CELLSIZE, CELLSIZE);
-						textSize(18);
+						textSize(CELLSIZE-(CELLSIZE/10));
 						fill(BLUEPURPLE);
-						text('F', i-6, j+6);
+						text('F', i-(CELLSIZE-(CELLSIZE/10))/3, j+(CELLSIZE-(CELLSIZE/10))/3);
 					} else{
 						fill(123);
 						rect(i, j, CELLSIZE, CELLSIZE);					
 					}					
 				} else if (setInicio == true){
 					if (mouseIsPressed) {
-						if (mouseButton === LEFT && !casasOcupadas[i+"x"+j]) {
+						if (mouseButton === LEFT && (!casasOcupadas[i+"x"+j] || casasOcupadas[i+"x"+j]=="caminho" || casasOcupadas[i+"x"+j]=="ocupada")) {
 							  casasOcupadas[i+"x"+j]="inicio";
 							  setInicio = false;
 						}
 					}
 					fill(BLUEGREEN);
 					rect(i,j,CELLSIZE,CELLSIZE);
-					textSize(18);
+					textSize(CELLSIZE-(CELLSIZE/10));
 					fill(0);
-					text('S', i-6, j+6);			
+					text('S', i-(CELLSIZE-(CELLSIZE/10))/3, j+(CELLSIZE-(CELLSIZE/10))/3);			
 				} else if (setEnd == true){
 					if (mouseIsPressed) {
-						if (mouseButton === LEFT && !casasOcupadas[i+"x"+j]) {
+						if (mouseButton === LEFT && (!casasOcupadas[i+"x"+j] || casasOcupadas[i+"x"+j]=="caminho" || casasOcupadas[i+"x"+j]=="ocupada")) {
 							  casasOcupadas[i+"x"+j]="fim";
 							  setEnd = false;
 						}
 					}
 					fill(BLUEPURPLE);
 					rect(i,j,CELLSIZE,CELLSIZE);
-					textSize(18);
+					textSize(CELLSIZE-(CELLSIZE/10));
 					fill(0);
-					text('F', i-6, j+6);			
+					text('F', i-(CELLSIZE-(CELLSIZE/10))/3, j+(CELLSIZE-(CELLSIZE/10))/3);			
 				}
 			} // If mouse not over
 			else {
@@ -318,16 +330,16 @@ function draw() {
 				else if(casasOcupadas[i+"x"+j]=="inicio"){
 					fill(BLUEGREEN)
 					rect(i, j, CELLSIZE, CELLSIZE);
-					textSize(18);
+					textSize(CELLSIZE-(CELLSIZE/10));
 					fill(255);
-					text('S', i-6, j+6);			
+					text('S', i-(CELLSIZE-(CELLSIZE/10))/3, j+(CELLSIZE-(CELLSIZE/10))/3);			
 				}
 				else if(casasOcupadas[i+"x"+j]=="fim"){
 					fill(BLUEPURPLE)
 					rect(i, j, CELLSIZE, CELLSIZE);
-					textSize(18);
+					textSize(CELLSIZE-(CELLSIZE/10));
 					fill(255);
-					text('F', i-6, j+6);
+					text('F', i-(CELLSIZE-(CELLSIZE/10))/3, j+(CELLSIZE-(CELLSIZE/10))/3);
 				} else {
 					noFill();
 					rect(i, j, CELLSIZE, CELLSIZE);
