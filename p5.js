@@ -62,7 +62,7 @@ function clearPath() {
 function mazeAlg() {
 	clearObs()
 	clearPath()
-	for (var i = RANGE; i < (height)+ RANGE; i += CELLSIZE) {
+	for (var i = RANGE; i < height + RANGE; i += CELLSIZE) {
 		for (var j = RANGE; j < width + RANGE; j += CELLSIZE) {
 			if(i==RANGE || j==RANGE || i==height-RANGE || j==width-RANGE){
 				casasOcupadas[i+"x"+j] = "ocupada"			
@@ -71,52 +71,78 @@ function mazeAlg() {
 	}
 	dividorsX=[]
 	dividorsY=[]
-	maze2(RANGE,RANGE,(height-RANGE),(width-RANGE))	
+	maze2(RANGE,RANGE,width-RANGE,height-RANGE)	
 }
 
-function maze2(x,y,h,w){
-	dividorX =(Math.floor(Math.random() * ((w-CELLSIZE)/CELLSIZE - (x+CELLSIZE*2)/CELLSIZE)) + (x+CELLSIZE*2)/CELLSIZE) * CELLSIZE
-	dividorY=(Math.floor(Math.random() * ((h-CELLSIZE)/CELLSIZE - (y+CELLSIZE*2)/CELLSIZE)) + (y+CELLSIZE*2)/CELLSIZE) * CELLSIZE
+function maze2(x,y,w,h){
+	let dividorY = -1
+	let dividorX = -1
+	counter=0
+	// Randomizes X and Y Dividing Line
+	while((dividorY<0 || dividorX<0 || dividorsX.includes(dividorY) || dividorsY.includes(dividorX)) && counter < 1000){
+		dividorX = (Math.floor(Math.random() * ((w-CELLSIZE)/CELLSIZE - (x+CELLSIZE*2)/CELLSIZE)) + (x+CELLSIZE*2)/CELLSIZE) * CELLSIZE
+		dividorY = (Math.floor(Math.random() * ((h-CELLSIZE)/CELLSIZE - (y+CELLSIZE*2)/CELLSIZE)) + (y+CELLSIZE*2)/CELLSIZE) * CELLSIZE
+		counter++
+	}
+	console.log(`New dividorX: ${dividorX}`)
+	console.log(`New dividorY: ${dividorY}`)
 	dividorsX.push(dividorX)
 	dividorsY.push(dividorY)
-	passagem11=-1
-	passagem12=-1
 	
-	while(passagem11<0 || passagem12<0 || dividorsY.includes(passagem11) || dividorsY.includes(passagem12)){
-		passagem11=(Math.floor(Math.random() * ((dividorY-CELLSIZE)/CELLSIZE - (x+CELLSIZE*2)/CELLSIZE)) + (x+CELLSIZE*2)/CELLSIZE) * CELLSIZE
-		passagem12=(Math.floor(Math.random() * ((w-CELLSIZE)/CELLSIZE - (dividorY+CELLSIZE*2)/CELLSIZE)) + (dividorY+CELLSIZE*2)/CELLSIZE) * CELLSIZE		
-	}
-	passagem21=-1
-	passagem22=-1
-	while(passagem21<0 || passagem22<0 || dividorsX.includes(passagem21) || dividorsX.includes(passagem22)){
-		passagem21=(Math.floor(Math.random() * ((dividorX-CELLSIZE)/CELLSIZE - (y+CELLSIZE*2)/CELLSIZE)) + (y+CELLSIZE*2)/CELLSIZE) * CELLSIZE
-		passagem22=(Math.floor(Math.random() * ((h-CELLSIZE)/CELLSIZE - (dividorX+CELLSIZE*2)/CELLSIZE)) + (dividorX+CELLSIZE*2)/CELLSIZE) * CELLSIZE	
-	}	
+	let passagemX1=-1
+	let passagemX2=-1
+	counter = 0
+	// Randomizes Passages in the X Dividing Line
+	while((passagemX1<0 || passagemX2<0 || dividorsX.includes(passagemX1) || dividorsX.includes(passagemX2)) && counter < 1000){
+		passagemX1=(Math.floor(Math.random() * ((dividorY-CELLSIZE)/CELLSIZE - (y+CELLSIZE*2)/CELLSIZE)) + (y+CELLSIZE*2)/CELLSIZE) * CELLSIZE
+		passagemX2=(Math.floor(Math.random() * ((h-CELLSIZE)/CELLSIZE - (dividorY+CELLSIZE*2)/CELLSIZE)) + (dividorY+CELLSIZE*2)/CELLSIZE) * CELLSIZE	
+		counter++
+		}	
+	console.log(`New passagemX1: ${passagemX1} going on dividorsX`)
+	console.log(`New passagemX2: ${passagemX2} going on dividorsX`)		
+	dividorsX.push(passagemX1)
+	dividorsX.push(passagemX2)	
 	
-	for (var j = x; j < w + RANGE; j += CELLSIZE) {
-		casasOcupadas[j+"x"+dividorX] = "ocupada"						
+	let passagemY1=-1
+	let passagemY2=-1
+	counter = 0
+	// Randomizes Passages in the Y Dividing Line
+	while((passagemY1<0 || passagemY2<0 || dividorsY.includes(passagemY1) || dividorsY.includes(passagemY2)) && counter < 1000){
+		passagemY1=(Math.floor(Math.random() * ((dividorX-CELLSIZE)/CELLSIZE - (x+CELLSIZE*2)/CELLSIZE)) + (x+CELLSIZE*2)/CELLSIZE) * CELLSIZE
+		passagemY2=(Math.floor(Math.random() * ((w-CELLSIZE)/CELLSIZE - (dividorX+CELLSIZE*2)/CELLSIZE)) + (dividorX+CELLSIZE*2)/CELLSIZE) * CELLSIZE
+		counter++
 	}
-	delete casasOcupadas[passagem11+"x"+dividorX]
-	delete casasOcupadas[passagem12+"x"+dividorX]
+	console.log(`New passagemY1: ${passagemY1} going on dividorsY`)
+	console.log(`New passagemY2: ${passagemY2} going on dividorsY`)	
+	dividorsY.push(passagemY1)
+	dividorsY.push(passagemY2)
 	
-	for (var i = y; i < h + RANGE; i += CELLSIZE) {
-		casasOcupadas[dividorY+"x"+i] = "ocupada"						
+	for (var i = x; i < h + RANGE; i += CELLSIZE) {
+		casasOcupadas[i+"x"+dividorX] = "ocupada"						
 	}
-	delete casasOcupadas[dividorY+"x"+passagem21]
-	delete casasOcupadas[dividorY+"x"+passagem22]
+	delete casasOcupadas[passagemX1+"x"+dividorX]
+	delete casasOcupadas[passagemX2+"x"+dividorX]
+	
+ 	for (var j = y; j < w + RANGE; j += CELLSIZE) {
+		casasOcupadas[dividorY+"x"+j] = "ocupada"						
+	}
+	delete casasOcupadas[dividorY+"x"+passagemY1]
+	delete casasOcupadas[dividorY+"x"+passagemY2] 
+		
 
 	// Segundo Quadrante
 	if(dividorX-x>CELLSIZE*4 && dividorY-y>CELLSIZE*4){
 		maze2(x,y,dividorX,dividorY)
 	} 
+	// Quarto Quadrante
+	if(h-dividorY>CELLSIZE*4 && w-dividorX>CELLSIZE*4){
+		maze2(dividorY,dividorX,h,w)
+	}
  	// Terceiro Quadrante
-/* 	if(dividorX-x>80 && h-dividorY>80){
-		maze2(x,dividorY,dividorX,h)
+/*	if(dividorX-x>80 && h-dividorY>80){
+		maze2(dividorY,y,h,dividorX)
 	}
- 	// Quarto Quadrante
-	if(w-dividorX>80 && h-dividorY>80){
-		maze2(dividorX,dividorY,h,w)
-	}
+
 	//Primeiro Quadrante
 	if(w-dividorX>80 && dividorY-y>80){
 		maze2(dividorX,y,w,dividorY)
@@ -126,7 +152,7 @@ function maze2(x,y,h,w){
 
 function pathFind() {
 	clearPath()
-	for (var i = RANGE; i < (height) + RANGE; i += CELLSIZE) {
+	for (var i = RANGE; i < height + RANGE; i += CELLSIZE) {
 		matriz[(i-RANGE)/CELLSIZE] = []
 		for (var j = RANGE; j < width + RANGE; j += CELLSIZE) {
 			matriz[(i-RANGE)/CELLSIZE][(j-RANGE)/CELLSIZE] = "vazio"
