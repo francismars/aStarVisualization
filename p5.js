@@ -69,40 +69,44 @@ function mazeAlg() {
 			}			
 		}	
 	}
+	dividorsX=[]
+	dividorsY=[]
 	maze2(RANGE,RANGE,(height-RANGE),(width-RANGE))	
 }
 
 function maze2(x,y,h,w){
-	dividorX =(Math.floor(Math.random() * ((w-CELLSIZE)/CELLSIZE - (x+40)/CELLSIZE)) + (x+40)/CELLSIZE) * CELLSIZE
-	dividorY=(Math.floor(Math.random() * ((h-CELLSIZE)/CELLSIZE - (y+40)/CELLSIZE)) + (y+40)/CELLSIZE) * CELLSIZE
+	dividorX =(Math.floor(Math.random() * ((w-CELLSIZE)/CELLSIZE - (x+CELLSIZE*2)/CELLSIZE)) + (x+CELLSIZE*2)/CELLSIZE) * CELLSIZE
+	dividorY=(Math.floor(Math.random() * ((h-CELLSIZE)/CELLSIZE - (y+CELLSIZE*2)/CELLSIZE)) + (y+CELLSIZE*2)/CELLSIZE) * CELLSIZE
 	dividorsX.push(dividorX)
 	dividorsY.push(dividorY)
 	passagem11=-1
 	passagem12=-1
 	
 	while(passagem11<0 || passagem12<0 || dividorsY.includes(passagem11) || dividorsY.includes(passagem12)){
-		passagem11=(Math.floor(Math.random() * ((dividorY-CELLSIZE)/CELLSIZE - (x+40)/CELLSIZE)) + (x+40)/CELLSIZE) * CELLSIZE
-		passagem12=(Math.floor(Math.random() * ((w-CELLSIZE)/CELLSIZE - (dividorY+40)/CELLSIZE)) + (dividorY+40)/CELLSIZE) * CELLSIZE		
+		passagem11=(Math.floor(Math.random() * ((dividorY-CELLSIZE)/CELLSIZE - (x+CELLSIZE*2)/CELLSIZE)) + (x+CELLSIZE*2)/CELLSIZE) * CELLSIZE
+		passagem12=(Math.floor(Math.random() * ((w-CELLSIZE)/CELLSIZE - (dividorY+CELLSIZE*2)/CELLSIZE)) + (dividorY+CELLSIZE*2)/CELLSIZE) * CELLSIZE		
 	}
 	passagem21=-1
 	passagem22=-1
 	while(passagem21<0 || passagem22<0 || dividorsX.includes(passagem21) || dividorsX.includes(passagem22)){
-		passagem21=(Math.floor(Math.random() * ((dividorX-CELLSIZE)/CELLSIZE - (y+40)/CELLSIZE)) + (y+40)/CELLSIZE) * CELLSIZE
-		passagem22=(Math.floor(Math.random() * ((h-CELLSIZE)/CELLSIZE - (dividorX+40)/CELLSIZE)) + (dividorX+40)/CELLSIZE) * CELLSIZE	
+		passagem21=(Math.floor(Math.random() * ((dividorX-CELLSIZE)/CELLSIZE - (y+CELLSIZE*2)/CELLSIZE)) + (y+CELLSIZE*2)/CELLSIZE) * CELLSIZE
+		passagem22=(Math.floor(Math.random() * ((h-CELLSIZE)/CELLSIZE - (dividorX+CELLSIZE*2)/CELLSIZE)) + (dividorX+CELLSIZE*2)/CELLSIZE) * CELLSIZE	
 	}	
-	for (var j = RANGE; j < width + RANGE; j += CELLSIZE) {
+	
+	for (var j = x; j < w + RANGE; j += CELLSIZE) {
 		casasOcupadas[j+"x"+dividorX] = "ocupada"						
 	}
 	delete casasOcupadas[passagem11+"x"+dividorX]
 	delete casasOcupadas[passagem12+"x"+dividorX]
-	for (var i = RANGE; i < (height)+ RANGE; i += CELLSIZE) {
+	
+	for (var i = y; i < h + RANGE; i += CELLSIZE) {
 		casasOcupadas[dividorY+"x"+i] = "ocupada"						
 	}
 	delete casasOcupadas[dividorY+"x"+passagem21]
 	delete casasOcupadas[dividorY+"x"+passagem22]
 
 	// Segundo Quadrante
-	if(dividorX-x>80 && dividorY-y>80){
+	if(dividorX-x>CELLSIZE*4 && dividorY-y>CELLSIZE*4){
 		maze2(x,y,dividorX,dividorY)
 	} 
  	// Terceiro Quadrante
@@ -199,92 +203,11 @@ function aStar(){
 						fScore[neighbor] = gScore[neighbor] + dist(neighbor[0], goal[0], neighbor[1], goal[1])
 						if(!closeSet.includes(neighbor)){
 							openSet.push(neighbor)
-
-						}
-											
-					}		
-					
+						}										
+					}					
 				}
 			}
-		}
-		
-/* 		// vizinho esquerda
-		if(current[0]>0 && matriz[current[0]-1][current[1]]!="ocupada"){
-			tentative_gScore = gScore[current] + 1
-			neighbor=[]
-			neighbor[0]=current[0]-1
-			neighbor[1]=current[1]
-			if(!gScore[neighbor]){
-				gScore[neighbor]=99999;
-				
-			}				
-			if(tentative_gScore < gScore[neighbor]){
-                cameFrom[neighbor] = current
-                gScore[neighbor] = tentative_gScore
-                fScore[neighbor] = gScore[neighbor] + dist(neighbor[0], goal[0], neighbor[1], goal[1])
-                if(!closeSet.includes(neighbor)){
-					openSet.push(neighbor)
-
-				}
-                    				
-			}		
-		}
-		// vizinho cima
-		if(current[1]>0 && matriz[current[0]][current[1]-1]!="ocupada"){
-			tentative_gScore = gScore[current] + 1
-			neighbor=[]
-			neighbor[0]=current[0]
-			neighbor[1]=current[1]-1
-			if(!gScore[neighbor]){
-				gScore[neighbor]=99999;
-			}				
-			if(tentative_gScore < gScore[neighbor]){
-                cameFrom[neighbor] = current
-                gScore[neighbor] = tentative_gScore
-                fScore[neighbor] = gScore[neighbor] + dist(neighbor[0], goal[0], neighbor[1], goal[1])
-                if(!closeSet.includes(neighbor)){
-					openSet.push(neighbor)
-				}
-                    				
-			}		
-		}
-		// vizinho baixo
-		if(current[1]+1<matriz[0].length && matriz[current[0]][current[1]+1]!="ocupada"){
-			tentative_gScore = gScore[current] + 1
-			neighbor=[]
-			neighbor[0]=current[0]
-			neighbor[1]=current[1]+1
-			if(!gScore[neighbor]){
-				gScore[neighbor]=99999;
-			}				
-			if(tentative_gScore < gScore[neighbor]){
-                cameFrom[neighbor] = current
-                gScore[neighbor] = tentative_gScore
-                fScore[neighbor] = gScore[neighbor] + dist(neighbor[0], goal[0], neighbor[1], goal[1])
-                if(!closeSet.includes(neighbor)){
-					openSet.push(neighbor)
-				}
-                    				
-			}		
-		}		
-		// vizinho direita
-		if(current[0]+1<matriz.length-1 && matriz[current[0]+1][current[1]]!="ocupada"){
-			tentative_gScore = gScore[current] + 1
-			neighbor=[]
-			neighbor[0]=current[0]+1
-			neighbor[1]=current[1]
-			if(!gScore[neighbor]){
-				gScore[neighbor]=99999;
-			}				
-			if(tentative_gScore < gScore[neighbor]){
-                cameFrom[neighbor] = current
-                gScore[neighbor] = tentative_gScore
-                fScore[neighbor] = gScore[neighbor] + dist(neighbor[0], goal[0], neighbor[1], goal[1])
-                if(!closeSet.includes(neighbor)){
-					openSet.push(neighbor)
-				}                    				
-			}		
-		}	 */		
+		}	
 	}
 	return []
 }
