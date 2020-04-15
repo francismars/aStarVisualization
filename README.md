@@ -12,4 +12,4 @@ Right Mouse:
 
 Maze Generator in Beta
 
-Live Demo: https://francisconlm.github.io/aStarVisualization/
+Live Demo: https://francismars.github.io/aStarVisualization/
